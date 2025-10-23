@@ -4,8 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 
 // Supabase URL and Anon Key
 // These will be provided after creating a Supabase project
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
 
 // Server-side Supabase key (has more permissions)
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || '';
@@ -161,7 +161,14 @@ export type Database = {
 
 // Helper function to check if Supabase is configured
 export function isSupabaseConfigured(): boolean {
-	return !!(supabaseUrl && supabaseAnonKey && supabaseUrl !== '' && supabaseAnonKey !== '');
+	return !!(
+		supabaseUrl && 
+		supabaseAnonKey && 
+		supabaseUrl !== '' && 
+		supabaseAnonKey !== '' &&
+		supabaseUrl !== 'https://placeholder.supabase.co' &&
+		supabaseAnonKey !== 'placeholder-anon-key'
+	);
 }
 
 // Helper function for error handling

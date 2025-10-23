@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,7 +20,8 @@ import {
 import type { ReferralCodeWithUrl, ReferralStats } from '@/lib/types';
 import { MOCK_CURRENT_USER_REFERRAL_CODE, MOCK_CURRENT_USER_STATS } from '@/lib/mock-data';
 
-export default function ReferralsPage({ params }: { params: { experienceId: string } }) {
+export default function ReferralsPage({ params }: { params: Promise<{ experienceId: string }> }) {
+	const { experienceId } = use(params);
 	const [referralCode, setReferralCode] = useState<ReferralCodeWithUrl | null>(null);
 	const [stats, setStats] = useState<ReferralStats | null>(null);
 	const [isLoading, setIsLoading] = useState(true);

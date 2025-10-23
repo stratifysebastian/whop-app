@@ -30,8 +30,8 @@ export default async function ExperiencePage({
 	const { accessLevel } = result;
 
 	return (
-		<div className="flex justify-center items-center h-screen px-8">
-			<h1 className="text-xl">
+		<div className="flex justify-center items-center h-screen px-8 font-arimo">
+			<h1 className="text-xl font-normal font-arimo">
 				Hi <strong>{user.name}</strong>, you{" "}
 				<strong>{result.hasAccess ? "have" : "do not have"} access</strong> to
 				this experience. Your access level to this whop is:{" "}

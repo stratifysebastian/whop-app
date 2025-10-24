@@ -30,7 +30,7 @@ export default async function DashboardPage({
 
 	return (
 		<div className="flex justify-center items-center h-screen px-8">
-			<h1 className="text-xl">
+			<h1 className="text-xl" style={{ fontFamily: 'var(--font-arimo)' }}>
 				Hi <strong>{user.name}</strong>, you{" "}
 				<strong>{result.hasAccess ? "have" : "do not have"} access</strong> to
 				this company. Your access level to this company is:{" "}

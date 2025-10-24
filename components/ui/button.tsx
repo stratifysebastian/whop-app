@@ -8,15 +8,17 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 active:scale-95",
+          "bg-primary text-white shadow-lg shadow-primary/25 hover:bg-primary-dark hover:text-white hover:shadow-xl hover:shadow-primary/30 active:scale-95",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          "bg-destructive text-white shadow-sm hover:bg-destructive/90 hover:text-white",
         outline:
-          "border-2 border-primary bg-background text-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 active:scale-95",
+          "border-2 border-primary bg-background text-primary hover:bg-primary hover:text-white hover:shadow-lg hover:shadow-primary/20 active:scale-95",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-lg shadow-secondary/25 hover:bg-secondary-dark hover:shadow-xl hover:shadow-secondary/30 active:scale-95",
-        ghost: "hover:bg-accent/10 hover:text-accent-foreground",
+          "bg-secondary text-white shadow-lg shadow-secondary/25 hover:bg-secondary-dark hover:text-white hover:shadow-xl hover:shadow-secondary/30 active:scale-95",
+        ghost: "text-gray-700 hover:bg-accent/10 hover:text-accent",
         link: "text-primary underline-offset-4 hover:underline",
+        accent: "bg-accent text-white shadow-lg shadow-accent/25 hover:bg-accent-dark hover:text-white hover:shadow-xl hover:shadow-accent/30 active:scale-95",
+        info: "bg-info text-white shadow-lg shadow-info/25 hover:bg-info-dark hover:text-white hover:shadow-xl hover:shadow-info/30 active:scale-95",
       },
       size: {
         default: "h-10 px-6 py-2",

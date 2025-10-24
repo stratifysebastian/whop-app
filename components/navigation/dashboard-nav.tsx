@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { 
 	Users, 
 	Award, 
+	Trophy,
 	Shield, 
 	ChevronRight, 
 	ArrowBigLeftDash,
@@ -29,6 +30,11 @@ export function DashboardNav({ companyId }: DashboardNavProps) {
 			href: `/dashboard/${companyId}/rewards`,
 			label: 'Rewards',
 			icon: Award,
+		},
+		{
+			href: `/dashboard/${companyId}/campaigns`,
+			label: 'Campaigns',
+			icon: Trophy,
 		},
 		{
 			href: `/dashboard/${companyId}/security`,

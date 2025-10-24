@@ -2,7 +2,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
-import { generateMockReferrerList, generateMockUsers } from '@/lib/mock-data';
 
 export async function GET(request: NextRequest) {
 	try {
@@ -20,49 +19,48 @@ export async function GET(request: NextRequest) {
 			}, { status: 400 });
 		}
 
-		let referrers: any[] = [];
-
-		// If Supabase is not configured, use mock data
+		// Ensure Supabase is configured
 		if (!isSupabaseConfigured()) {
-			const mockUsers = generateMockUsers(50);
-			referrers = generateMockReferrerList(mockUsers);
-		} else {
-			// Fetch real data from Supabase
-			const { data: users } = await supabaseAdmin
-				.from('users')
-				.select('*')
-				.eq('whop_company_id', companyId);
+			return NextResponse.json({
+				success: false,
+				error: {
+					code: 'DATABASE_NOT_CONFIGURED',
+					message: 'Database not configured. Please set up Supabase.',
+				},
+			}, { status: 500 });
+		}
 
-			for (const user of users || []) {
-				const { data: referrals } = await supabaseAdmin
-					.from('referrals')
-					.select('status, revenue_attributed')
-					.eq('referrer_id', user.id);
+		// Fetch real data from Supabase
+		const { data: users } = await supabaseAdmin
+			.from('users')
+			.select('*')
+			.eq('whop_company_id', companyId);
 
-				const totalReferrals = referrals?.length || 0;
-				if (totalReferrals > 0) {
-					const conversions = referrals?.filter(r => r.status === 'converted').length || 0;
-					const conversionRate = totalReferrals > 0 ? (conversions / totalReferrals) * 100 : 0;
-					const revenueAttributed = referrals?.reduce((sum, r) => sum + (r.revenue_attributed || 0), 0) || 0;
+		const referrers: any[] = [];
 
-					const { data: rewards } = await supabaseAdmin
-						.from('reward_redemptions')
-						.select('id')
-						.eq('user_id', user.id)
-						.eq('status', 'granted');
+		for (const user of users || []) {
+			const { data: referrals } = await supabaseAdmin
+				.from('referrals')
+				.select('status, revenue_attributed')
+				.eq('referrer_id', user.id);
 
-					referrers.push({
-						user_id: user.id,
-						username: user.username || 'Anonymous',
-						email: user.email,
-						referrals: totalReferrals,
-						conversions,
-						conversion_rate: conversionRate.toFixed(1),
-						revenue_attributed: revenueAttributed.toFixed(2),
-						rewards_earned: rewards?.length || 0,
-						joined_at: user.created_at,
-					});
-				}
+			const totalReferrals = referrals?.length || 0;
+			if (totalReferrals > 0) {
+				const conversions = referrals?.filter(r => r.status === 'converted').length || 0;
+				const conversionRate = totalReferrals > 0 ? (conversions / totalReferrals) * 100 : 0;
+				const revenueAttributed = referrals?.reduce((sum, r) => sum + (r.revenue_attributed || 0), 0) || 0;
+
+				referrers.push({
+					user_id: user.id,
+					username: user.username || 'Unknown',
+					email: user.email || '',
+					referrals: totalReferrals,
+					conversions,
+					conversion_rate: conversionRate,
+					revenue_attributed: revenueAttributed,
+					rewards_earned: 0, // TODO: Calculate from rewards table
+					joined_at: user.created_at,
+				});
 			}
 		}
 
@@ -83,33 +81,31 @@ export async function GET(request: NextRequest) {
 			const rows = referrers.map(r => [
 				r.user_id,
 				r.username,
-				r.email || '',
+				r.email,
 				r.referrals,
 				r.conversions,
-				r.conversion_rate,
-				r.revenue_attributed,
+				r.conversion_rate.toFixed(2),
+				r.revenue_attributed.toFixed(2),
 				r.rewards_earned,
-				r.joined_at,
+				new Date(r.joined_at).toLocaleDateString(),
 			]);
 
-			const csvContent = [
-				headers.join(','),
-				...rows.map(row => row.map(cell => `"${cell}"`).join(',')),
-			].join('\n');
+			const csvContent = [headers, ...rows]
+				.map(row => row.map(field => `"${field}"`).join(','))
+				.join('\n');
 
 			return new NextResponse(csvContent, {
 				headers: {
 					'Content-Type': 'text/csv',
-					'Content-Disposition': `attachment; filename="referly-referrers-${Date.now()}.csv"`,
+					'Content-Disposition': `attachment; filename="referrers-${Date.now()}.csv"`,
 				},
 			});
 		}
 
-		// JSON format
-		return NextResponse.json(referrers, {
-			headers: {
-				'Content-Disposition': `attachment; filename="referly-referrers-${Date.now()}.json"`,
-			},
+		// Default to JSON
+		return NextResponse.json({
+			success: true,
+			data: referrers,
 		});
 
 	} catch (error) {
@@ -123,5 +119,3 @@ export async function GET(request: NextRequest) {
 		}, { status: 500 });
 	}
 }
-
-

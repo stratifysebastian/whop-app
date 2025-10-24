@@ -19,25 +19,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
 			}, { status: 400 });
 		}
 
-		// If Supabase is not configured, return mock data
+		// Ensure Supabase is configured
 		if (!isSupabaseConfigured()) {
 			return NextResponse.json({
-				success: true,
-				data: {
-					eligible_rewards: [
-						{
-							reward_id: 'mock_reward_1',
-							name: '5 Referrals Bonus',
-							can_claim: true,
-						},
-					],
-					next_milestone: {
-						reward_id: 'mock_reward_2',
-						name: '10 Referrals Bonus',
-						referrals_needed: 3,
-					},
+				success: false,
+				error: {
+					code: 'DATABASE_NOT_CONFIGURED',
+					message: 'Database not configured. Please set up Supabase.',
 				},
-			});
+			}, { status: 500 });
 		}
 
 		// Get user from database

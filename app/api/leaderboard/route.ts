@@ -3,7 +3,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { ApiResponse, LeaderboardEntry, TimeFrame } from '@/lib/types';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
-import { generateMockUsers, generateMockLeaderboard } from '@/lib/mock-data';
 
 export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<LeaderboardEntry[]>>> {
 	try {
@@ -22,14 +21,15 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 			}, { status: 400 });
 		}
 
-		// If Supabase is not configured, return mock data
+		// Ensure Supabase is configured
 		if (!isSupabaseConfigured()) {
-			const mockUsers = generateMockUsers(limit);
-			const mockLeaderboard = generateMockLeaderboard(mockUsers);
 			return NextResponse.json({
-				success: true,
-				data: mockLeaderboard.slice(0, limit),
-			});
+				success: false,
+				error: {
+					code: 'DATABASE_NOT_CONFIGURED',
+					message: 'Database not configured. Please set up Supabase.',
+				},
+			}, { status: 500 });
 		}
 
 		// Calculate date range based on timeframe

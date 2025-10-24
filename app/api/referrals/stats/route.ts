@@ -3,7 +3,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { ApiResponse, ReferralStats } from '@/lib/types';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
-import { MOCK_CURRENT_USER_STATS } from '@/lib/mock-data';
 
 export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<ReferralStats>>> {
 	try {
@@ -19,12 +18,15 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 			}, { status: 401 });
 		}
 
-		// If Supabase is not configured, return mock data
+		// Ensure Supabase is configured
 		if (!isSupabaseConfigured()) {
 			return NextResponse.json({
-				success: true,
-				data: MOCK_CURRENT_USER_STATS,
-			});
+				success: false,
+				error: {
+					code: 'DATABASE_NOT_CONFIGURED',
+					message: 'Database not configured. Please set up Supabase.',
+				},
+			}, { status: 500 });
 		}
 
 		// Get user ID

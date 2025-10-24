@@ -120,6 +120,9 @@ export interface Campaign {
 	start_date: string;
 	end_date: string;
 	status: CampaignStatus;
+	point_multiplier: number;
+	prize_pool: string | null;
+	is_active: boolean;
 	rules: CampaignRules | null;
 	prizes: CampaignPrize[] | null;
 	total_referrals: number;

@@ -34,17 +34,33 @@ export default function ReferralsDashboardPage({ params }: { params: Promise<{ c
 	const [searchQuery, setSearchQuery] = useState('');
 
 	// Fetch dashboard overview
-	const fetchOverview = async () => {
-		try {
-			const response = await fetch(`/api/dashboard/overview?companyId=${companyId}&timeframe=${timeframe}`);
-			const data = await response.json();
-			if (data.success) {
-				setOverview(data.data);
+		const fetchOverview = async () => {
+			try {
+				const response = await fetch(`/api/dashboard/overview?companyId=${companyId}&timeframe=${timeframe}`);
+				const data = await response.json();
+				if (data.success) {
+					setOverview(data.data);
+				} else {
+					// Handle database configuration errors
+					if (data.error?.code === 'DATABASE_NOT_CONFIGURED') {
+						console.error('Database not configured:', data.error.message);
+						// Set default empty overview
+						setOverview({
+							total_referrals: 0,
+							total_conversions: 0,
+							conversion_rate: 0,
+							revenue_attributed: 0,
+							active_users: 0,
+							top_referrers: [],
+						});
+					} else {
+						console.error('Failed to fetch overview:', data.error);
+					}
+				}
+			} catch (error) {
+				console.error('Failed to fetch overview:', error);
 			}
-		} catch (error) {
-			console.error('Failed to fetch overview:', error);
-		}
-	};
+		};
 
 	// Fetch referrers list
 	const fetchReferrers = async () => {
@@ -64,6 +80,16 @@ export default function ReferralsDashboardPage({ params }: { params: Promise<{ c
 			if (data.success) {
 				setReferrers(data.data.data);
 				setPagination(data.data.pagination);
+			} else {
+				// Handle database configuration errors
+				if (data.error?.code === 'DATABASE_NOT_CONFIGURED') {
+					console.error('Database not configured:', data.error.message);
+					// Show empty state or error message
+					setReferrers([]);
+				} else {
+					console.error('Failed to fetch referrers:', data.error);
+					setReferrers([]);
+				}
 			}
 		} catch (error) {
 			console.error('Failed to fetch referrers:', error);
@@ -72,18 +98,35 @@ export default function ReferralsDashboardPage({ params }: { params: Promise<{ c
 		}
 	};
 
-	const fetchChartData = async () => {
-		try {
-			const response = await fetch(`/api/dashboard/chart-data?companyId=${companyId}&timeframe=${timeframe}`);
-			const data = await response.json();
-			
-			if (data.success) {
-				setChartData(data.data);
+		const fetchChartData = async () => {
+			try {
+				const response = await fetch(`/api/dashboard/chart-data?companyId=${companyId}&timeframe=${timeframe}`);
+				const data = await response.json();
+				
+				if (data.success) {
+					setChartData(data.data);
+				} else {
+					// Handle database configuration errors
+					if (data.error?.code === 'DATABASE_NOT_CONFIGURED') {
+						console.error('Database not configured:', data.error.message);
+						// Set default empty chart data
+						setChartData([
+							{ date: 'Mon', referrals: 0, conversions: 0 },
+							{ date: 'Tue', referrals: 0, conversions: 0 },
+							{ date: 'Wed', referrals: 0, conversions: 0 },
+							{ date: 'Thu', referrals: 0, conversions: 0 },
+							{ date: 'Fri', referrals: 0, conversions: 0 },
+							{ date: 'Sat', referrals: 0, conversions: 0 },
+							{ date: 'Sun', referrals: 0, conversions: 0 },
+						]);
+					} else {
+						console.error('Failed to fetch chart data:', data.error);
+					}
+				}
+			} catch (error) {
+				console.error('Failed to fetch chart data:', error);
 			}
-		} catch (error) {
-			console.error('Failed to fetch chart data:', error);
-		}
-	};
+		};
 
 	// Handle export
 	const handleExport = async () => {

@@ -38,6 +38,9 @@ CREATE TABLE IF NOT EXISTS campaigns (
   start_date TIMESTAMP WITH TIME ZONE NOT NULL,
   end_date TIMESTAMP WITH TIME ZONE NOT NULL,
   status TEXT NOT NULL DEFAULT 'draft',
+  point_multiplier DECIMAL(3,1) DEFAULT 1.0,
+  prize_pool TEXT,
+  is_active BOOLEAN DEFAULT true,
   rules JSONB,
   prizes JSONB,
   total_referrals INTEGER DEFAULT 0,
@@ -127,7 +130,30 @@ CREATE TABLE IF NOT EXISTS referral_clicks (
 );
 
 -- ============================================================================
--- 3. Create all indexes
+-- 3. Add missing columns to existing campaigns table (if it exists)
+-- ============================================================================
+
+-- Add missing columns to campaigns table if they don't exist
+DO $$ 
+BEGIN
+  -- Add point_multiplier column if it doesn't exist
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'campaigns' AND column_name = 'point_multiplier') THEN
+    ALTER TABLE campaigns ADD COLUMN point_multiplier DECIMAL(3,1) DEFAULT 1.0;
+  END IF;
+  
+  -- Add prize_pool column if it doesn't exist
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'campaigns' AND column_name = 'prize_pool') THEN
+    ALTER TABLE campaigns ADD COLUMN prize_pool TEXT;
+  END IF;
+  
+  -- Add is_active column if it doesn't exist
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'campaigns' AND column_name = 'is_active') THEN
+    ALTER TABLE campaigns ADD COLUMN is_active BOOLEAN DEFAULT true;
+  END IF;
+END $$;
+
+-- ============================================================================
+-- 4. Create all indexes
 -- ============================================================================
 
 -- Users indexes

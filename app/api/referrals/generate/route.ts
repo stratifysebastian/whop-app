@@ -3,7 +3,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { ApiResponse, ReferralCodeWithUrl } from '@/lib/types';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
-import { generateMockReferralCode, MOCK_CURRENT_USER } from '@/lib/mock-data';
 
 // Helper function to generate unique code
 function generateUniqueCode(): string {
@@ -30,14 +29,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
 			}, { status: 401 });
 		}
 
-		// If Supabase is not configured, return mock data
+		// Ensure Supabase is configured
 		if (!isSupabaseConfigured()) {
-			console.warn('Supabase not configured, returning mock data');
-			const mockCode = generateMockReferralCode(MOCK_CURRENT_USER.id);
 			return NextResponse.json({
-				success: true,
-				data: mockCode,
-			});
+				success: false,
+				error: {
+					code: 'DATABASE_NOT_CONFIGURED',
+					message: 'Database not configured. Please set up Supabase.',
+				},
+			}, { status: 500 });
 		}
 
 		// Check if user exists in database
@@ -184,13 +184,15 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 			}, { status: 401 });
 		}
 
-		// If Supabase is not configured, return mock data
+		// Ensure Supabase is configured
 		if (!isSupabaseConfigured()) {
-			const mockCode = generateMockReferralCode(MOCK_CURRENT_USER.id);
 			return NextResponse.json({
-				success: true,
-				data: mockCode,
-			});
+				success: false,
+				error: {
+					code: 'DATABASE_NOT_CONFIGURED',
+					message: 'Database not configured. Please set up Supabase.',
+				},
+			}, { status: 500 });
 		}
 
 		// Get user ID

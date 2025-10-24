@@ -49,9 +49,17 @@ export default function ReferralsPage({ params }: { params: Promise<{ experience
 					if (codeData.success) {
 						setReferralCode(codeData.data);
 					} else {
-						// Use local code generator if API fails
-						const localCode = createOrGetReferralCode('demo-user-123', experienceId);
-						setReferralCode(localCode);
+						// Handle database configuration errors
+						if (codeData.error?.code === 'DATABASE_NOT_CONFIGURED') {
+							console.error('Database not configured:', codeData.error.message);
+							// Use local code generator as fallback
+							const localCode = createOrGetReferralCode('demo-user-123', experienceId);
+							setReferralCode(localCode);
+						} else {
+							// Use local code generator for other errors
+							const localCode = createOrGetReferralCode('demo-user-123', experienceId);
+							setReferralCode(localCode);
+						}
 					}
 				} else {
 					// Use local code generator if API fails
@@ -73,9 +81,17 @@ export default function ReferralsPage({ params }: { params: Promise<{ experience
 					if (statsData.success) {
 						setStats(statsData.data);
 					} else {
-						// Use local stats if API fails
-						const localStats = getLocalReferralStats('demo-user-123');
-						setStats(localStats);
+						// Handle database configuration errors
+						if (statsData.error?.code === 'DATABASE_NOT_CONFIGURED') {
+							console.error('Database not configured:', statsData.error.message);
+							// Use local stats as fallback
+							const localStats = getLocalReferralStats('demo-user-123');
+							setStats(localStats);
+						} else {
+							// Use local stats for other errors
+							const localStats = getLocalReferralStats('demo-user-123');
+							setStats(localStats);
+						}
 					}
 				} else {
 					// Use local stats if API fails

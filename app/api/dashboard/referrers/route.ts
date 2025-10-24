@@ -3,7 +3,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { ApiResponse, PaginatedResponse, ReferrerListItem, DashboardFilters } from '@/lib/types';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
-import { generateMockReferrerList, generateMockUsers } from '@/lib/mock-data';
 
 export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<PaginatedResponse<ReferrerListItem>>>> {
 	try {
@@ -25,41 +24,15 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 			}, { status: 400 });
 		}
 
-		// If Supabase is not configured, return mock data
+		// Ensure Supabase is configured
 		if (!isSupabaseConfigured()) {
-			const mockUsers = generateMockUsers(50);
-			let mockReferrers = generateMockReferrerList(mockUsers);
-
-			// Apply search filter
-			if (search) {
-				mockReferrers = mockReferrers.filter(r => 
-					r.username.toLowerCase().includes(search.toLowerCase())
-				);
-			}
-
-			// Apply sorting
-			mockReferrers.sort((a, b) => {
-				const aVal = a[sort as keyof ReferrerListItem] as number;
-				const bVal = b[sort as keyof ReferrerListItem] as number;
-				return order === 'desc' ? bVal - aVal : aVal - bVal;
-			});
-
-			// Apply pagination
-			const start = (page - 1) * limit;
-			const paginatedReferrers = mockReferrers.slice(start, start + limit);
-
 			return NextResponse.json({
-				success: true,
-				data: {
-					data: paginatedReferrers,
-					pagination: {
-						page,
-						limit,
-						total: mockReferrers.length,
-						total_pages: Math.ceil(mockReferrers.length / limit),
-					},
+				success: false,
+				error: {
+					code: 'DATABASE_NOT_CONFIGURED',
+					message: 'Database not configured. Please set up Supabase.',
 				},
-			});
+			}, { status: 500 });
 		}
 
 		// Get all users for this company with their referral stats

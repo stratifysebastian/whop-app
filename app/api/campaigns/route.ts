@@ -1,11 +1,11 @@
-// Rewards API - List and Create
+// Campaigns API - List and Create
 
 import { NextRequest, NextResponse } from 'next/server';
-import type { ApiResponse, Reward } from '@/lib/types';
+import type { ApiResponse, Campaign } from '@/lib/types';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 
-// GET - List all rewards for a company
-export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<Reward[]>>> {
+// GET - List all campaigns for a company
+export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<Campaign[]>>> {
 	try {
 		const { searchParams } = new URL(request.url);
 		const companyId = searchParams.get('companyId');
@@ -31,31 +31,30 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 			}, { status: 500 });
 		}
 
-		const { data: rewards, error } = await supabaseAdmin
-			.from('rewards')
+		const { data: campaigns, error } = await supabaseAdmin
+			.from('campaigns')
 			.select('*')
 			.eq('whop_company_id', companyId)
-			.eq('is_active', true)
-			.order('threshold', { ascending: true });
+			.order('created_at', { ascending: false });
 
 		if (error) {
-			console.error('Failed to fetch rewards:', error);
+			console.error('Failed to fetch campaigns:', error);
 			return NextResponse.json({
 				success: false,
 				error: {
 					code: 'DATABASE_ERROR',
-					message: 'Failed to fetch rewards',
+					message: 'Failed to fetch campaigns',
 				},
 			}, { status: 500 });
 		}
 
 		return NextResponse.json({
 			success: true,
-			data: rewards || [],
+			data: campaigns || [],
 		});
 
 	} catch (error) {
-		console.error('Error fetching rewards:', error);
+		console.error('Error fetching campaigns:', error);
 		return NextResponse.json({
 			success: false,
 			error: {
@@ -66,13 +65,21 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 	}
 }
 
-// POST - Create a new reward
-export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<Reward>>> {
+// POST - Create a new campaign
+export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<Campaign>>> {
 	try {
 		const body = await request.json();
-		const { companyId, name, description, threshold, reward_type, reward_data, auto_apply } = body;
+		const { 
+			companyId, 
+			name, 
+			description, 
+			start_date, 
+			end_date, 
+			point_multiplier, 
+			prize_pool 
+		} = body;
 
-		if (!companyId || !name || !threshold || !reward_type) {
+		if (!companyId || !name || !start_date || !end_date) {
 			return NextResponse.json({
 				success: false,
 				error: {
@@ -93,39 +100,55 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
 			}, { status: 500 });
 		}
 
-		const { data: reward, error } = await supabaseAdmin
-			.from('rewards')
+		// Determine campaign status based on dates
+		const now = new Date();
+		const startDate = new Date(start_date);
+		const endDate = new Date(end_date);
+		
+		let status: 'draft' | 'active' | 'ended' | 'archived' = 'draft';
+		if (now >= startDate && now <= endDate) {
+			status = 'active';
+		} else if (now > endDate) {
+			status = 'ended';
+		}
+
+		const { data: campaign, error } = await supabaseAdmin
+			.from('campaigns')
 			.insert({
 				whop_company_id: companyId,
 				name,
 				description: description || null,
-				threshold,
-				reward_type,
-				reward_data: reward_data || null,
-				auto_apply: auto_apply !== false,
-				is_active: true,
+				start_date,
+				end_date,
+				status,
+				point_multiplier: point_multiplier || 1,
+				prize_pool: prize_pool || null,
+				is_active: status === 'active',
+				rules: null,
+				prizes: null,
+				total_referrals: 0,
 			})
-			.select('*')
+			.select()
 			.single();
 
 		if (error) {
-			console.error('Failed to create reward:', error);
+			console.error('Failed to create campaign:', error);
 			return NextResponse.json({
 				success: false,
 				error: {
 					code: 'DATABASE_ERROR',
-					message: 'Failed to create reward',
+					message: 'Failed to create campaign',
 				},
 			}, { status: 500 });
 		}
 
 		return NextResponse.json({
 			success: true,
-			data: reward,
+			data: campaign,
 		});
 
 	} catch (error) {
-		console.error('Error creating reward:', error);
+		console.error('Error creating campaign:', error);
 		return NextResponse.json({
 			success: false,
 			error: {
@@ -135,5 +158,3 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
 		}, { status: 500 });
 	}
 }
-
-

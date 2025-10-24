@@ -1,20 +1,19 @@
-// Dashboard Chart Data API Route
+// Campaign-Specific Leaderboard API Route
 
 import { NextRequest, NextResponse } from 'next/server';
-import type { ApiResponse, TimeFrame } from '@/lib/types';
+import type { ApiResponse, LeaderboardEntry, TimeFrame } from '@/lib/types';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 
-interface ChartDataPoint {
-	date: string;
-	referrals: number;
-	conversions: number;
-}
-
-export async function GET(request: NextRequest): Promise<NextResponse<ApiResponse<ChartDataPoint[]>>> {
+export async function GET(
+	request: NextRequest,
+	{ params }: { params: Promise<{ campaignId: string }> }
+): Promise<NextResponse<ApiResponse<LeaderboardEntry[]>>> {
 	try {
+		const { campaignId } = await params;
 		const { searchParams } = new URL(request.url);
 		const companyId = searchParams.get('companyId');
 		const timeframe = (searchParams.get('timeframe') as TimeFrame) || '30d';
+		const limit = parseInt(searchParams.get('limit') || '50');
 
 		if (!companyId) {
 			return NextResponse.json({
@@ -53,69 +52,79 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 				break;
 		}
 
-		// Get referrals grouped by day
+		// Get campaign-specific referrals
 		const { data: referrals, error } = await supabaseAdmin
 			.from('referrals')
 			.select(`
-				created_at,
 				status,
+				created_at,
 				referrer:users!referrals_referrer_id_fkey (
+					id,
+					username,
+					avatar_url,
 					whop_company_id
 				)
 			`)
+			.eq('campaign_id', campaignId)
 			.eq('referrer.whop_company_id', companyId)
-			.gte('created_at', startDate.toISOString())
-			.order('created_at', { ascending: true });
+			.gte('created_at', startDate.toISOString());
 
 		if (error) {
-			console.error('Failed to fetch chart data:', error);
+			console.error('Failed to fetch campaign referrals:', error);
 			return NextResponse.json({
 				success: false,
 				error: {
 					code: 'DATABASE_ERROR',
-					message: 'Failed to fetch chart data',
+					message: 'Failed to fetch campaign leaderboard',
 				},
 			}, { status: 500 });
 		}
 
-		// Group by date and calculate daily stats
-		const dailyStats: Record<string, { referrals: number; conversions: number }> = {};
-		
+		// Process leaderboard data
+		const leaderboardMap: Record<string, LeaderboardEntry> = {};
+
 		referrals?.forEach(referral => {
-			const date = new Date(referral.created_at).toISOString().split('T')[0];
-			if (!dailyStats[date]) {
-				dailyStats[date] = { referrals: 0, conversions: 0 };
+			const referrer = (referral.referrer as any);
+			if (!referrer) return;
+
+			const userId = referrer.id;
+			if (!leaderboardMap[userId]) {
+				leaderboardMap[userId] = {
+					user_id: userId,
+					username: referrer.username || 'Anonymous',
+					avatar_url: referrer.avatar_url,
+					referrals: 0,
+					conversions: 0,
+					points: 0,
+					rank: 0,
+				};
 			}
-			dailyStats[date].referrals++;
+
+			leaderboardMap[userId].referrals++;
 			if (referral.status === 'converted') {
-				dailyStats[date].conversions++;
+				leaderboardMap[userId].conversions++;
 			}
 		});
 
-		// Generate chart data for the last 7 days
-		const chartData: ChartDataPoint[] = [];
-		const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-		
-		for (let i = 6; i >= 0; i--) {
-			const date = new Date();
-			date.setDate(date.getDate() - i);
-			const dateStr = date.toISOString().split('T')[0];
-			const dayName = days[date.getDay() === 0 ? 6 : date.getDay() - 1]; // Adjust for Sunday
-			
-			chartData.push({
-				date: dayName,
-				referrals: dailyStats[dateStr]?.referrals || 0,
-				conversions: dailyStats[dateStr]?.conversions || 0,
-			});
-		}
+		// Convert to array and calculate points
+		const leaderboardEntries = Object.values(leaderboardMap).map(entry => ({
+			...entry,
+			points: entry.conversions * 10, // 10 points per conversion
+		}));
+
+		// Sort by points and assign ranks
+		leaderboardEntries.sort((a, b) => b.points - a.points);
+		leaderboardEntries.forEach((entry, index) => {
+			entry.rank = index + 1;
+		});
 
 		return NextResponse.json({
 			success: true,
-			data: chartData,
+			data: leaderboardEntries.slice(0, limit),
 		});
 
 	} catch (error) {
-		console.error('Error fetching chart data:', error);
+		console.error('Error fetching campaign leaderboard:', error);
 		return NextResponse.json({
 			success: false,
 			error: {

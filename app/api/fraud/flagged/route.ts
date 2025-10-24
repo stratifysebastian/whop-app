@@ -29,22 +29,15 @@ export async function GET(request: NextRequest): Promise<NextResponse<ApiRespons
 			}, { status: 400 });
 		}
 
-		// If Supabase is not configured, return mock data
+		// Ensure Supabase is configured
 		if (!isSupabaseConfigured()) {
 			return NextResponse.json({
-				success: true,
-				data: [
-					{
-						id: 'fraud_1',
-						referrer_username: 'user123',
-						referred_username: 'user456',
-						check_type: 'ip_duplicate',
-						flagged_at: new Date().toISOString(),
-						details: { description: 'Same IP address used multiple times' },
-						status: 'pending' as const,
-					},
-				],
-			});
+				success: false,
+				error: {
+					code: 'DATABASE_NOT_CONFIGURED',
+					message: 'Database not configured. Please set up Supabase.',
+				},
+			}, { status: 500 });
 		}
 
 		// Get all fraud checks that are flagged

@@ -1,146 +1,259 @@
 # Referly - Referral & Affiliate Management for Whop
 
-Referly is a powerful referral and affiliate tracking system built for Whop creators. Incentivize member-driven growth, automate rewards, and run campaigns—all integrated directly with your Whop community.
+A comprehensive referral and affiliate management system built specifically for Whop creators. Track referrals, reward top performers, and grow your community with automated campaigns and leaderboards.
 
-## Features
+## 🚀 Features
 
-- 🔗 **Unique Referral Links** - Auto-generated referral codes for each member
-- 📊 **Tracking Dashboard** - Real-time analytics for creators
-- 🎁 **Automated Rewards** - Milestone-based perks and product unlocks
-- 🏆 **Leaderboards** - Gamified rankings to boost engagement
-- 🎯 **Campaigns** - Run timed referral challenges
-- 🛡️ **Anti-Fraud** - Built-in fraud detection and prevention
+### Core Functionality
+- **🎯 Referral Link Generation**: Unique, trackable referral codes for each user
+- **📊 Real-Time Analytics**: Comprehensive dashboard with conversion tracking
+- **🏆 Automated Rewards**: Milestone-based reward system with Whop integration
+- **🎪 Campaign Management**: Time-limited referral campaigns with custom rewards
+- **🏅 Leaderboards**: Global and campaign-specific rankings with embeddable widgets
+- **🛡️ Anti-Fraud Protection**: IP tracking, self-referral detection, and velocity limits
 
-## Quick Start
+### Advanced Features
+- **📱 Embeddable Widgets**: Leaderboards that can be embedded anywhere
+- **📈 CSV Export**: Download referral data for external analysis
+- **⚡ Real-Time Updates**: Live leaderboard updates and campaign progress
+- **📱 Mobile Responsive**: Optimized for all device sizes
+- **🔐 Whop OAuth**: Seamless integration with Whop authentication
 
-To run this project: 
+## 🏗️ Architecture
 
-1. Install dependencies with: `pnpm i`
+### Tech Stack
+- **Frontend**: Next.js 15, React, TypeScript
+- **Styling**: Tailwind CSS, shadcn/ui components
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Whop OAuth
+- **Deployment**: Vercel
+- **Fonts**: Hegarty (headings), Arimo (body)
 
-2. Create a Whop App on your [whop developer dashboard](https://whop.com/dashboard/developer/), then go to the "Hosting" section and:
-	- Ensure the "Base URL" is set to the domain you intend to deploy the site on.
-	- Ensure the "App path" is set to `/experiences/[experienceId]`
-	- Ensure the "Dashboard path" is set to `/dashboard/[companyId]` 
-	- Ensure the "Discover path" is set to `/discover` 
-
-3. Copy the environment variables into a `.env.local` file. See `docs/environment-variables.md` for the template.
-
-4. **(Optional)** Set up Supabase for data persistence. See `docs/supabase-setup.md` for instructions. The app works with mock data if Supabase is not configured.
-
-5. Go to a Whop created in the same org as the app you created. Navigate to the tools section and add your app.
-
-6. Run `pnpm dev` to start the dev server. Then in the top right of the window find a translucent settings icon. Select "localhost". The default port 3000 should work.
-
-## Project Structure
-
+### Project Structure
 ```
-referly/
-├── app/
-│   ├── api/referrals/        # Referral API endpoints
-│   ├── dashboard/            # Creator dashboard pages
-│   ├── experiences/          # User-facing pages
-│   │   └── [experienceId]/
-│   │       └── referrals/    # User referral page
-│   └── discover/             # Public discover page
-├── components/
-│   ├── ui/                   # shadcn/ui components
-│   ├── referrals/           # Referral-specific components
-│   ├── leaderboard/         # Leaderboard components
-│   └── campaigns/           # Campaign components
-├── lib/
-│   ├── types.ts            # TypeScript type definitions
-│   ├── mock-data.ts        # Mock data generators
-│   ├── whop-sdk.ts         # Whop API helpers
-│   └── supabase.ts         # Supabase client
-└── docs/
-    ├── database-schema.md   # Database structure
-    ├── api-spec.md          # API documentation
-    ├── supabase-setup.md    # Supabase setup guide
-    ├── progress.md          # Development progress
-    └── colorscheme.md       # Brand colors
-
+whop-app/
+├── app/                          # Next.js 15 app directory
+│   ├── api/                      # API routes
+│   │   ├── referrals/           # Referral management endpoints
+│   │   ├── dashboard/           # Dashboard analytics endpoints
+│   │   ├── campaigns/           # Campaign management endpoints
+│   │   ├── rewards/             # Reward system endpoints
+│   │   ├── leaderboard/         # Leaderboard endpoints
+│   │   └── fraud/               # Anti-fraud endpoints
+│   ├── dashboard/               # Creator dashboard pages
+│   ├── experiences/             # User-facing pages
+│   ├── embed/                   # Embeddable widgets
+│   └── discover/                # Marketing pages
+├── components/                  # Reusable UI components
+│   ├── ui/                      # shadcn/ui components
+│   ├── navigation/              # Navigation components
+│   ├── referrals/               # Referral-specific components
+│   └── leaderboard/             # Leaderboard components
+├── lib/                         # Utility functions and configurations
+│   ├── supabase.ts             # Supabase client setup
+│   ├── whop-sdk.ts              # Whop SDK extensions
+│   ├── types.ts                 # TypeScript type definitions
+│   └── fraud-detection.ts       # Anti-fraud utilities
+└── docs/                        # Documentation
+    ├── admin-manual.md          # Admin user guide
+    ├── api-documentation.md     # API reference
+    ├── deployment-guide.md      # Production deployment
+    └── database-schema.md       # Database documentation
 ```
 
-## Development Status
+## 🚀 Quick Start
 
-Current features available for testing:
+### Prerequisites
+- Node.js 18+ and pnpm
+- Whop developer account
+- Supabase account (for database)
 
-✅ **User Referral Page** - Share referral links, track stats  
-✅ **Referral API** - Generate codes, track clicks and conversions  
-✅ **Referral Middleware** - Automatic link tracking via cookies  
+### Installation
 
-In progress:
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd whop-app
+   ```
 
-🚧 **Creator Dashboard** - Analytics and referrer management  
-📋 **Rewards System** - Automated milestone rewards  
-📋 **Leaderboards** - Real-time rankings  
-📋 **Campaigns** - Timed referral challenges  
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
 
-See `docs/progress.md` for detailed status.
+3. **Set up environment variables**
+   ```bash
+   cp .env.local.example .env.local
+   ```
+   
+   Fill in your environment variables:
+   ```env
+   # Whop Configuration
+   WHOP_APP_ID=your-whop-app-id
+   WHOP_APP_SECRET=your-whop-app-secret
+   
+   # Supabase Configuration
+   NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+   SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+   
+   # NextAuth Configuration
+   NEXTAUTH_SECRET=your-nextauth-secret
+   NEXTAUTH_URL=http://localhost:3000
+   ```
 
-## Deploying
+4. **Set up the database**
+   - Create a new Supabase project
+   - Run the migration script from `docs/supabase-migration.sql`
+   - Verify all tables are created
 
-1. Upload your fork / copy of this template to github. 
+5. **Start the development server**
+   ```bash
+   pnpm dev
+   ```
 
-2. Go to [Vercel](https://vercel.com/new) and link the repository. Deploy your application with the environment variables from your `.env.local`
+6. **Access the application**
+   - Open [http://localhost:3000](http://localhost:3000)
+   - Complete the Whop OAuth flow
+   - Start creating campaigns and referral links
 
-3. If necessary update you "Base Domain" and webhook callback urls on the app settings page on the whop dashboard.
+## 📊 Development Status
 
-## Configuration
+### ✅ Completed Features
+- **Phase 1**: Foundation & Architecture Setup
+- **Phase 2**: Referral Links & Code Generation
+- **Phase 3**: Tracking Dashboard
+- **Phase 4**: Automated Rewards System
+- **Phase 5**: Referral Leaderboard
+- **Phase 6**: Campaign Builder
+- **Phase 7**: Anti-Fraud Mechanisms
+- **Phase 8**: Polish & Documentation
 
-### Environment Variables
+### 🎯 Key Implementations
+- **Referral System**: Complete with code generation, tracking, and validation
+- **Dashboard Analytics**: Real-time stats, charts, and export functionality
+- **Campaign Management**: Create, edit, copy, and manage time-limited campaigns
+- **Reward Automation**: Milestone-based rewards with Whop integration
+- **Leaderboards**: Global and campaign-specific with embeddable widgets
+- **Anti-Fraud**: IP tracking, self-referral detection, and velocity limits
+- **UI/UX**: Loading states, error boundaries, empty states, and responsive design
 
-Required variables (see `docs/environment-variables.md`):
-- `NEXT_PUBLIC_WHOP_APP_ID` - Your Whop app ID
-- `WHOP_API_KEY` - Whop API key
-- `NEXT_PUBLIC_WHOP_AGENT_USER_ID` - Agent user ID
-- `NEXT_PUBLIC_WHOP_COMPANY_ID` - Your company ID
+## 🚀 Deployment
 
-Optional (for database persistence):
-- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anon key
-- `SUPABASE_SERVICE_KEY` - Supabase service role key
+### Vercel Deployment
+
+1. **Connect to Vercel**
+   - Import your repository to Vercel
+   - Configure build settings (auto-detected for Next.js)
+
+2. **Set environment variables**
+   - Add all environment variables from your `.env.local`
+   - Ensure production URLs are used
+
+3. **Deploy**
+   - Vercel will automatically deploy on every push to main
+   - Your app will be available at the provided Vercel URL
+
+### Environment Variables for Production
+
+```env
+# Production URLs
+NEXTAUTH_URL=https://your-domain.com
+NEXT_PUBLIC_SUPABASE_URL=your-production-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-production-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-production-supabase-service-role-key
+
+# Whop Production App
+WHOP_APP_ID=your-production-whop-app-id
+WHOP_APP_SECRET=your-production-whop-app-secret
+```
+
+## ⚙️ Configuration
 
 ### Whop Dashboard Settings
 
-In your Whop developer dashboard, configure:
-- **App path**: `/experiences/[experienceId]`
-- **Dashboard path**: `/dashboard/[companyId]`
-- **Discover path**: `/discover`
-- **Base URL**: Your deployment domain
+1. **Create a Whop App**
+   - Go to your Whop Dashboard
+   - Navigate to Apps → Create App
+   - Fill in app details
 
-## Documentation
+2. **Configure OAuth**
+   - Set redirect URI: `https://your-domain.com/auth/callback`
+   - Add allowed origins: `https://your-domain.com`
+   - Configure required scopes: `user:read`, `company:read`
 
-- [Database Schema](docs/database-schema.md) - Complete database structure
-- [API Specification](docs/api-spec.md) - All API endpoints
-- [Supabase Setup](docs/supabase-setup.md) - Database setup guide
-- [Development Progress](docs/progress.md) - Current build status
-- [Color Scheme](colorscheme.md) - Brand colors and usage
+3. **Get Credentials**
+   - Copy your App ID and App Secret
+   - Use these in your environment variables
 
-## Tech Stack
+### Supabase Setup
 
-- **Framework**: Next.js 15 with App Router
-- **Styling**: Tailwind CSS v4 with custom color scheme
-- **UI Components**: shadcn/ui
-- **Database**: Supabase (PostgreSQL)
-- **Auth**: Whop OAuth
-- **Deployment**: Vercel-ready
+1. **Create Project**
+   - Go to [supabase.com](https://supabase.com)
+   - Create a new project
+   - Choose a region close to your users
 
-## Troubleshooting
+2. **Run Migration**
+   - Copy the SQL from `docs/supabase-migration.sql`
+   - Paste and run in the Supabase SQL Editor
+   - Verify all tables are created
 
-**App not loading properly?**  
-Make sure to set the "App path" in your Whop developer dashboard. The placeholder text doesn't mean it's set - you must explicitly enter `/experiences/[experienceId]`
+3. **Get API Keys**
+   - Go to Settings → API
+   - Copy Project URL, anon key, and service role key
+   - Use these in your environment variables
 
-**No data showing?**  
-The app uses mock data when Supabase is not configured. To enable real data persistence, follow the Supabase setup guide.
+## 📚 Documentation
 
-**TypeScript errors?**  
-Run `pnpm install` to ensure all dependencies are installed.
+- **[Admin Manual](docs/admin-manual.md)**: Complete guide for managing referrals and campaigns
+- **[API Documentation](docs/api-documentation.md)**: Comprehensive API reference
+- **[Deployment Guide](docs/deployment-guide.md)**: Production deployment instructions
+- **[Database Schema](docs/database-schema.md)**: Database structure and relationships
 
-## Contributing
+## 🧪 Testing
 
-This is a custom Whop app for referral management. For Whop platform docs, visit https://dev.whop.com/introduction
+### Local Testing
+```bash
+# Run development server
+pnpm dev
 
-## License
+# Run build test
+pnpm build
 
-Proprietary - Built for Whop creators
+# Run linting
+pnpm lint
+```
+
+### Test Scenarios
+- ✅ OAuth authentication flow
+- ✅ Referral code generation and tracking
+- ✅ Campaign creation and management
+- ✅ Reward system automation
+- ✅ Leaderboard functionality
+- ✅ Anti-fraud detection
+- ✅ Mobile responsiveness
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+For support and questions:
+- 📖 Check the [documentation](docs/)
+- 🐛 Open an issue on GitHub
+- 💬 Contact the development team
+
+---
+
+**Built with ❤️ for the Whop community**
+
+*Referly - Empowering creators to grow their communities through intelligent referral systems.*

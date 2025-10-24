@@ -10,6 +10,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { CardSkeleton } from '@/components/ui/skeleton';
+import { EmptyState, NoCampaignsEmptyState } from '@/components/ui/empty-state';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { 
 	Plus, 
 	Calendar, 
@@ -291,13 +295,20 @@ export default function CampaignsPage({ params }: { params: Promise<{ companyId:
 		return (
 			<div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-					<div className="animate-pulse">
-						<div className="h-8 bg-gray-200 rounded w-1/3 mb-8"></div>
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-							{[...Array(6)].map((_, i) => (
-								<div key={i} className="h-64 bg-gray-200 rounded-lg"></div>
-							))}
+					<div className="mb-8">
+						<div className="flex items-center justify-between mb-6">
+							<div>
+								<div className="h-8 bg-gray-200 rounded w-48 mb-2 animate-pulse"></div>
+								<div className="h-4 bg-gray-200 rounded w-64 animate-pulse"></div>
+							</div>
+							<div className="h-10 bg-gray-200 rounded w-32 animate-pulse"></div>
 						</div>
+					</div>
+					
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						{Array.from({ length: 6 }).map((_, i) => (
+							<CardSkeleton key={i} />
+						))}
 					</div>
 				</div>
 			</div>
@@ -305,8 +316,9 @@ export default function CampaignsPage({ params }: { params: Promise<{ companyId:
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-orange-50 via-gold to-purple-50">
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+		<ErrorBoundary>
+			<div className="min-h-screen bg-gradient-to-br from-orange-50 via-gold to-purple-50">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 				{/* Header */}
 				<div className="flex items-center justify-between mb-8">
 					<div>
@@ -558,26 +570,12 @@ export default function CampaignsPage({ params }: { params: Promise<{ companyId:
 
 				{/* Empty State */}
 				{campaigns.length === 0 && !showCreateForm && (
-					<Card className="border-2 border-dashed border-gray-300">
-						<CardContent className="text-center py-12">
-							<Trophy className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-							<h3 className="text-lg font-hegarty text-gray-900 mb-2">
-								No campaigns yet
-							</h3>
-							<p className="text-gray-600 font-arimo mb-6">
-								Create your first referral campaign to boost engagement
-							</p>
-							<Button
-								onClick={() => setShowCreateForm(true)}
-								className="bg-primary hover:bg-primary-dark"
-							>
-								<Plus className="w-5 h-5 mr-2" />
-								Create Your First Campaign
-							</Button>
-						</CardContent>
-					</Card>
+					<NoCampaignsEmptyState 
+						onCreateClick={() => setShowCreateForm(true)}
+					/>
 				)}
+				</div>
 			</div>
-		</div>
+		</ErrorBoundary>
 	);
 }

@@ -72,6 +72,19 @@ export default function ReferralsDashboardPage({ params }: { params: Promise<{ c
 		}
 	};
 
+	const fetchChartData = async () => {
+		try {
+			const response = await fetch(`/api/dashboard/chart-data?companyId=${companyId}&timeframe=${timeframe}`);
+			const data = await response.json();
+			
+			if (data.success) {
+				setChartData(data.data);
+			}
+		} catch (error) {
+			console.error('Failed to fetch chart data:', error);
+		}
+	};
+
 	// Handle export
 	const handleExport = async () => {
 		try {
@@ -92,25 +105,26 @@ export default function ReferralsDashboardPage({ params }: { params: Promise<{ c
 
 	useEffect(() => {
 		fetchOverview();
+		fetchChartData();
 	}, [companyId, timeframe]);
 
 	useEffect(() => {
 		fetchReferrers();
 	}, [companyId, pagination.page, sortField, sortOrder, searchQuery]);
 
-	// Mock chart data (replace with real data from API later)
-	const chartData = [
-		{ date: 'Mon', referrals: 12, conversions: 5 },
-		{ date: 'Tue', referrals: 19, conversions: 8 },
-		{ date: 'Wed', referrals: 15, conversions: 7 },
-		{ date: 'Thu', referrals: 22, conversions: 11 },
-		{ date: 'Fri', referrals: 28, conversions: 14 },
-		{ date: 'Sat', referrals: 35, conversions: 18 },
-		{ date: 'Sun', referrals: 30, conversions: 15 },
-	];
+	// Chart data state
+	const [chartData, setChartData] = useState([
+		{ date: 'Mon', referrals: 0, conversions: 0 },
+		{ date: 'Tue', referrals: 0, conversions: 0 },
+		{ date: 'Wed', referrals: 0, conversions: 0 },
+		{ date: 'Thu', referrals: 0, conversions: 0 },
+		{ date: 'Fri', referrals: 0, conversions: 0 },
+		{ date: 'Sat', referrals: 0, conversions: 0 },
+		{ date: 'Sun', referrals: 0, conversions: 0 },
+	]);
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50">
+		<div className="min-h-screen bg-gradient-to-br from-orange-50 via-orange to-purple-50">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 				{/* Header */}
 				<div className="flex items-center justify-between mb-8">
@@ -125,14 +139,14 @@ export default function ReferralsDashboardPage({ params }: { params: Promise<{ c
 
 					<div className="flex items-center gap-3">
 						{/* Timeframe Selector */}
-						<div className="flex items-center gap-2 bg-white rounded-lg border-2 border-gray-200 p-1 shadow-sm">
+						<div className="flex items-center gap-2 bg-black rounded-lg border-2 border-gray-200 p-1 shadow-sm">
 							{(['7d', '30d', 'all'] as TimeFrame[]).map((tf) => (
 								<Button
 									key={tf}
 									onClick={() => setTimeframe(tf)}
 									variant={timeframe === tf ? 'default' : 'ghost'}
 									size="sm"
-									className="font-arimo"
+									className="font-arimo text-gray-900 hover:bg-primary/50 hover:text-white"
 								>
 									<Calendar className="w-4 h-4 mr-2" />
 									{tf === '7d' ? '7 Days' : tf === '30d' ? '30 Days' : 'All Time'}
@@ -145,8 +159,10 @@ export default function ReferralsDashboardPage({ params }: { params: Promise<{ c
 							onClick={() => {
 								fetchOverview();
 								fetchReferrers();
+								fetchChartData();
 							}}
 							variant="outline"
+							className="text-gray-900 hover:bg-secondary hover:text-white"
 							size="default"
 						>
 							<RefreshCw className="w-4 h-4 mr-2" />
@@ -160,7 +176,7 @@ export default function ReferralsDashboardPage({ params }: { params: Promise<{ c
 					<Card className="border-2 border-primary/20 hover:border-primary shadow-lg hover:shadow-xl transition-all">
 						<CardContent className="p-6">
 							<div className="flex items-center justify-between mb-2">
-								<Users className="w-8 h-8 text-primary" />
+								<Users className="w-8 h-8 text-gray-900" />
 								<Badge variant="default" className="shadow-md">Total</Badge>
 							</div>
 							<div className="text-3xl font-bold text-gray-900 mb-1 font-hegarty">
@@ -190,7 +206,7 @@ export default function ReferralsDashboardPage({ params }: { params: Promise<{ c
 								<Badge variant="accent" className="shadow-md">Rate</Badge>
 							</div>
 							<div className="text-3xl font-bold text-gray-900 mb-1 font-hegarty">
-								{overview?.conversion_rate.toFixed(1)}%
+								{overview?.conversion_rate?.toFixed(1) || '0.0'}%
 							</div>
 							<div className="text-sm text-gray-600 font-arimo">Conversion Rate</div>
 						</CardContent>
@@ -215,7 +231,7 @@ export default function ReferralsDashboardPage({ params }: { params: Promise<{ c
 					{/* Line Chart - Referrals Over Time */}
 					<Card className="border-0 shadow-xl">
 						<CardHeader>
-							<CardTitle className="text-xl font-hegarty">Referrals Over Time</CardTitle>
+							<CardTitle className="text-xl font-normal font-hegarty">Referrals Over Time</CardTitle>
 							<CardDescription className="font-arimo">Daily referral and conversion trends</CardDescription>
 						</CardHeader>
 						<CardContent>
@@ -243,7 +259,7 @@ export default function ReferralsDashboardPage({ params }: { params: Promise<{ c
 					{/* Bar Chart - Top Referrers */}
 					<Card className="border-0 shadow-xl">
 						<CardHeader>
-							<CardTitle className="text-xl font-hegarty">Top Performers</CardTitle>
+							<CardTitle className="text-xl font-normal font-hegarty">Top Performers</CardTitle>
 							<CardDescription className="font-arimo">Top 5 referrers this period</CardDescription>
 						</CardHeader>
 						<CardContent>

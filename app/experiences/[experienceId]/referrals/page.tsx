@@ -15,10 +15,11 @@ import {
 	TrendingUp,
 	Users,
 	Award,
-	ExternalLink
+	ExternalLink,
+	RefreshCw
 } from 'lucide-react';
 import type { ReferralCodeWithUrl, ReferralStats } from '@/lib/types';
-import { MOCK_CURRENT_USER_REFERRAL_CODE, MOCK_CURRENT_USER_STATS } from '@/lib/mock-data';
+import { createOrGetReferralCode, getLocalReferralStats } from '@/lib/referral-code-generator';
 
 export default function ReferralsPage({ params }: { params: Promise<{ experienceId: string }> }) {
 	const { experienceId } = use(params);
@@ -29,19 +30,82 @@ export default function ReferralsPage({ params }: { params: Promise<{ experience
 	const [codeCopied, setCodeCopied] = useState(false);
 
 	useEffect(() => {
-		// Fetch referral code and stats
-		// For now, use mock data
-		setTimeout(() => {
-			setReferralCode(MOCK_CURRENT_USER_REFERRAL_CODE);
-			setStats(MOCK_CURRENT_USER_STATS);
-			setIsLoading(false);
-		}, 500);
-	}, []);
+		const fetchData = async () => {
+			try {
+				setIsLoading(true);
+				
+				// Try to fetch from API first
+				const codeResponse = await fetch('/api/referrals/generate', {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'x-whop-user-id': 'demo-user-123', // TODO: Get from Whop auth
+						'x-whop-company-id': experienceId,
+					},
+				});
+				
+				if (codeResponse.ok) {
+					const codeData = await codeResponse.json();
+					if (codeData.success) {
+						setReferralCode(codeData.data);
+					} else {
+						// Use local code generator if API fails
+						const localCode = createOrGetReferralCode('demo-user-123', experienceId);
+						setReferralCode(localCode);
+					}
+				} else {
+					// Use local code generator if API fails
+					const localCode = createOrGetReferralCode('demo-user-123', experienceId);
+					setReferralCode(localCode);
+				}
+				
+				// Try to fetch stats from API
+				const statsResponse = await fetch('/api/referrals/stats', {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'x-whop-user-id': 'demo-user-123', // TODO: Get from Whop auth
+					},
+				});
+				
+				if (statsResponse.ok) {
+					const statsData = await statsResponse.json();
+					if (statsData.success) {
+						setStats(statsData.data);
+					} else {
+						// Use local stats if API fails
+						const localStats = getLocalReferralStats('demo-user-123');
+						setStats(localStats);
+					}
+				} else {
+					// Use local stats if API fails
+					const localStats = getLocalReferralStats('demo-user-123');
+					setStats(localStats);
+				}
+			} catch (error) {
+				console.error('Failed to fetch data:', error);
+				// Use local code generator as fallback
+				const localCode = createOrGetReferralCode('demo-user-123', experienceId);
+				const localStats = getLocalReferralStats('demo-user-123');
+				setReferralCode(localCode);
+				setStats(localStats);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		
+		fetchData();
+	}, [experienceId]);
 
 	const copyToClipboard = (text: string, setStateFn: (val: boolean) => void) => {
 		navigator.clipboard.writeText(text);
 		setStateFn(true);
 		setTimeout(() => setStateFn(false), 2000);
+	};
+
+	const generateNewCode = () => {
+		const newCode = createOrGetReferralCode('demo-user-123', experienceId);
+		setReferralCode(newCode);
 	};
 
 	const shareOnTwitter = () => {
@@ -80,7 +144,7 @@ export default function ReferralsPage({ params }: { params: Promise<{ experience
 					<Card className="border-2 border-primary/20 hover:border-primary shadow-lg hover:shadow-xl transition-all">
 						<CardContent className="p-6">
 							<div className="flex items-center justify-between mb-2">
-								<Users className="w-8 h-8 text-primary" />
+								<Users className="w-8 h-8 text-gray-900" />
 								<Badge variant="default" className="shadow-md">Total</Badge>
 							</div>
 							<div className="text-3xl font-normal text-gray-900 mb-1 font-hegarty">
@@ -152,7 +216,7 @@ export default function ReferralsPage({ params }: { params: Promise<{ experience
 								Referral Code
 							</label>
 							<div className="flex gap-2">
-								<div className="flex-1 bg-white border-2 border-gray-200 rounded-lg px-4 py-3 font-mono text-lg font-normal text-primary">
+								<div className="flex-1 bg-white border-2 border-gray-200 rounded-lg px-4 py-3 font-mono text-lg font-normal text-gray-10">
 									{referralCode?.code}
 								</div>
 								<Button
@@ -172,6 +236,15 @@ export default function ReferralsPage({ params }: { params: Promise<{ experience
 											Copy
 										</>
 									)}
+								</Button>
+								<Button
+									onClick={generateNewCode}
+									variant="outline"
+									size="lg"
+									className="px-6"
+								>
+									<RefreshCw className="w-5 h-5 mr-2" />
+									New Code
 								</Button>
 							</div>
 						</div>
@@ -249,7 +322,7 @@ export default function ReferralsPage({ params }: { params: Promise<{ experience
 				<Card className="border-2 border-dashed border-primary/30 bg-black">
 					<CardHeader>
 						<CardTitle className="text-2xl font-normal font-hegarty flex items-center">
-							<Award className="w-6 h-6 mr-2 text-primary" />
+							<Award className="w-6 h-6 mr-2 text-gray-10" />
 							How Referrals Work
 						</CardTitle>
 					</CardHeader>
@@ -260,7 +333,7 @@ export default function ReferralsPage({ params }: { params: Promise<{ experience
 									1
 								</span>
 								<div>
-									<div className="font-semibold text-gray-900 mb-1">Share Your Link</div>
+									<div className="font-semibold text-gray-10 mb-1">Share Your Link</div>
 									<div className="text-gray-600">Copy your unique referral link and share it with friends</div>
 								</div>
 							</li>
@@ -269,7 +342,7 @@ export default function ReferralsPage({ params }: { params: Promise<{ experience
 									2
 								</span>
 								<div>
-									<div className="font-semibold text-gray-900 mb-1">Friends Join</div>
+									<div className="font-semibold text-gray-10 mb-1">Friends Join</div>
 									<div className="text-gray-600">When they sign up using your link, it's tracked automatically</div>
 								</div>
 							</li>
@@ -278,7 +351,7 @@ export default function ReferralsPage({ params }: { params: Promise<{ experience
 									3
 								</span>
 								<div>
-									<div className="font-semibold text-gray-900 mb-1">Earn Rewards</div>
+									<div className="font-semibold text-gray-10 mb-1">Earn Rewards</div>
 									<div className="text-gray-600">Hit milestones to unlock exclusive perks and bonuses</div>
 								</div>
 							</li>

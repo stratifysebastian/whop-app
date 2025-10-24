@@ -16,6 +16,7 @@ export default {
 					light: "#FF8555",
 					dark: "#E65420",
 					bright: "#FF7F50",
+					text: "#1F2937", // Dark gray for readable text
 				},
 				secondary: {
 					DEFAULT: "#7B2CBF",

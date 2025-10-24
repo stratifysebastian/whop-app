@@ -120,7 +120,7 @@ export default function RewardsManagementPage({ params }: { params: Promise<{ co
 	};
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50">
+		<div className="min-h-screen bg-gradient-to-br from-orange-50 via-secondary to-purple-50">
 			<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 				{/* Header */}
 				<div className="flex items-center justify-between mb-8">
@@ -144,12 +144,12 @@ export default function RewardsManagementPage({ params }: { params: Promise<{ co
 					<Card className="border-2 border-primary/20 shadow-lg">
 						<CardContent className="p-6">
 							<div className="flex items-center justify-between mb-2">
-								<Award className="w-8 h-8 text-primary" />
+								<Award className="w-8 h-8 text-gray-900" />
 							</div>
 							<div className="text-3xl font-bold text-gray-900 mb-1 font-hegarty">
 								{rewards.filter(r => r.is_active).length}
 							</div>
-							<div className="text-sm text-gray-600 font-arimo">Active Rewards</div>
+							<div className="text-sm text-gray-900 font-arimo">Active Rewards</div>
 						</CardContent>
 					</Card>
 
@@ -335,7 +335,7 @@ export default function RewardsManagementPage({ params }: { params: Promise<{ co
 										id="auto_apply"
 										checked={formData.auto_apply}
 										onChange={(e) => setFormData({ ...formData, auto_apply: e.target.checked })}
-										className="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary"
+										className="w-5 h-5 text-gray-900 border-gray-300 rounded focus:ring-primary"
 									/>
 									<label htmlFor="auto_apply" className="text-sm font-semibold text-gray-700 font-arimo">
 										Automatically grant this reward when threshold is reached
@@ -403,7 +403,7 @@ export default function RewardsManagementPage({ params }: { params: Promise<{ co
 											
 											<div className="flex-1">
 												<div className="flex items-center gap-3 mb-1">
-													<h3 className="text-lg font-bold text-gray-900 font-hegarty">
+													<h3 className="text-lg text-gray-900 font-hegarty">
 														{reward.name}
 													</h3>
 													{getRewardTypeBadge(reward.reward_type)}

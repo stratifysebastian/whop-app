@@ -22,7 +22,7 @@ export default function DiscoverPage() {
 						Transform Your Community Growth
 					</Badge>
 					
-					<h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 font-hegarty leading-tight">
+					<h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-10 mb-6 font-hegarty leading-tight">
 						Discover{" "}
 						<span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
 							Referly
@@ -31,7 +31,7 @@ export default function DiscoverPage() {
 					
 					<p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto font-arimo leading-relaxed">
 						The ultimate referral and affiliate tracking system for creators who want to{" "}
-						<span className="font-bold text-primary">unlock viral growth</span> and{" "}
+						<span className="font-bold text-gray-10">unlock viral growth</span> and{" "}
 						<span className="font-bold text-secondary">reward loyal members</span>—all from your Whop dashboard.
 					</p>
 					
@@ -77,7 +77,7 @@ export default function DiscoverPage() {
 				{/* Features Grid */}
 				<div className="mb-20">
 					<div className="text-center mb-12">
-						<h2 className="text-4xl md:text-5xl text-gray-900 mb-4 font-hegarty">
+						<h2 className="text-4xl md:text-5xl text-gray-10 mb-4 font-hegarty">
 							Why Creators Love Referly
 						</h2>
 						<p className="text-lg text-gray-600 max-w-2xl mx-auto font-arimo">
@@ -143,7 +143,7 @@ export default function DiscoverPage() {
 							<CheckCircle2 className="w-4 h-4 mr-2" />
 							Proven Results
 						</Badge>
-						<h2 className="text-4xl md:text-5xl text-gray-900 mb-4 font-hegarty">
+						<h2 className="text-4xl md:text-5xl text-gray-10 mb-4 font-hegarty">
 							Success Stories
 						</h2>
 						<p className="text-lg text-gray-600 max-w-2xl mx-auto font-arimo">
@@ -157,7 +157,7 @@ export default function DiscoverPage() {
 							<CardHeader className="pb-4">
 								<div className="flex items-start justify-between mb-4">
 									<div>
-										<CardTitle className="text-2xl font-hegarty text-gray-900 mb-2">
+										<CardTitle className="text-2xl font-hegarty text-gray-10 mb-2">
 											GrowLabs
 										</CardTitle>
 										<Badge variant="outline" className="text-xs font-arimo">
@@ -177,12 +177,12 @@ export default function DiscoverPage() {
 							<CardContent className="space-y-4">
 								<p className="text-gray-700 text-base leading-relaxed font-arimo">
 									"Referly helped us reach{" "}
-									<span className="font-bold text-primary text-lg">$7,200+/mo</span> in new MRR within just 2 months. The campaign-based rewards system created incredible momentum."
+									<span className="font-bold text-gray-10 text-lg">$7,200+/mo</span> in new MRR within just 2 months. The campaign-based rewards system created incredible momentum."
 								</p>
 								
 								<div className="grid grid-cols-2 gap-4 pt-4">
 									<div className="text-center p-4 bg-white rounded-lg shadow-sm">
-										<div className="text-3xl font-bold text-primary font-hegarty">4,000+</div>
+										<div className="text-3xl font-bold text-gray-10 font-hegarty">4,000+</div>
 										<div className="text-sm text-gray-600 font-arimo">Referrals</div>
 									</div>
 									<div className="text-center p-4 bg-white rounded-lg shadow-sm">
@@ -211,7 +211,7 @@ export default function DiscoverPage() {
 							<CardHeader className="pb-4">
 								<div className="flex items-start justify-between mb-4">
 									<div>
-										<CardTitle className="text-2xl font-hegarty text-gray-900 mb-2">
+										<CardTitle className="text-2xl font-hegarty text-gray-10 mb-2">
 											CreatorCore
 										</CardTitle>
 										<Badge variant="outline" className="text-xs font-arimo">
@@ -282,15 +282,18 @@ export default function DiscoverPage() {
 							<Button 
 								size="xl" 
 								variant="outline"
-								className="bg-white text-primary hover:bg-white/90 border-0 font-bold text-lg shadow-xl hover:scale-105 transition-all"
+								asChild
+								className="bg-white text-gray-10 hover:bg-white/90 border-0 font-bold text-lg shadow-xl hover:scale-105 transition-all"
 							>
-								Install Referly
-								<Rocket className="w-5 h-5" />
+								<a href="https://whop.com/referly/?a=referly"  className="flex items-center gap-2" target="_blank" rel="noopener noreferrer">
+									Install Referly
+									<Rocket className="w-5 h-5" />
+								</a>
 							</Button>
 							<Button 
 								size="xl" 
 								variant="secondary"
-								className="font-bold text-lg shadow-xl hover:scale-105 transition-all"
+								className="hidden font-bold text-lg shadow-xl hover:scale-105 transition-all"
 							>
 								View Documentation
 							</Button>
@@ -303,7 +306,7 @@ export default function DiscoverPage() {
 					<Card className="border-2 border-dashed border-primary/30 bg-orange-50/50">
 						<CardHeader>
 							<CardTitle className="text-lg font-normal font-hegarty flex items-center">
-								<CheckCircle2 className="w-5 h-5 mr-2 text-primary" />
+								<CheckCircle2 className="w-5 h-5 mr-2 text-gray-10" />
 								Pro Tip: Showcase Success
 							</CardTitle>
 							<CardDescription className="font-arimo">
@@ -319,7 +322,7 @@ export default function DiscoverPage() {
 								Pro Tip: Use Referral Links
 							</CardTitle>
 							<CardDescription className="font-arimo">
-								Add <code className="bg-white px-2 py-1 rounded text-primary font-mono">?a=referly</code> to your Whop links to earn affiliate commissions while promoting Referly.
+								Add <code className="bg-white px-2 py-1 rounded text-gray-10 font-mono">?a=referly</code> to your Whop links to earn affiliate commissions while promoting Referly.
 							</CardDescription>
 						</CardHeader>
 					</Card>

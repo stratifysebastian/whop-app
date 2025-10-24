@@ -123,7 +123,7 @@ export default function UserRewardsPage({ params }: { params: Promise<{ experien
 	};
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50">
+		<div className="min-h-screen bg-gradient-to-br from-orange-50 via-gold to-purple-50">
 			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 				{/* Header */}
 				<div className="text-center mb-12">
@@ -143,7 +143,7 @@ export default function UserRewardsPage({ params }: { params: Promise<{ experien
 					<div className="bg-gradient-to-r from-primary/10 via-accent/10 to-secondary/10 p-6 border-b">
 						<div className="flex items-center justify-between mb-4">
 							<div>
-								<h3 className="text-2xl font-bold text-gray-900 font-hegarty mb-1">
+								<h3 className="text-2xl text-gray-900 font-hegarty mb-1">
 									{stats?.total_conversions || 0} Successful Referrals
 								</h3>
 								<p className="text-sm text-gray-600 font-arimo">
@@ -215,7 +215,7 @@ export default function UserRewardsPage({ params }: { params: Promise<{ experien
 										<div className="flex items-start gap-6">
 											{/* Icon */}
 											<div className={`w-16 h-16 rounded-2xl ${
-												isLocked ? 'bg-gray-300' : 'bg-gradient-to-br from-primary to-accent'
+												isLocked ? 'bg-red-7' : 'bg-gradient from-primary to-secondary'
 											} flex items-center justify-center text-white shadow-lg flex-shrink-0`}>
 												{isLocked ? <Lock className="w-8 h-8" /> : getRewardIcon(reward.reward_type)}
 											</div>
@@ -225,7 +225,7 @@ export default function UserRewardsPage({ params }: { params: Promise<{ experien
 												<div className="flex items-start justify-between mb-3">
 													<div>
 														<div className="flex items-center gap-3 mb-2">
-															<h3 className="text-2xl font-bold text-gray-900 font-hegarty">
+															<h3 className="text-2xl text-gray-900 font-hegarty">
 																{reward.name}
 															</h3>
 															{isEligible && (
@@ -253,7 +253,7 @@ export default function UserRewardsPage({ params }: { params: Promise<{ experien
 														<span className="text-sm font-semibold text-gray-700 font-arimo">
 															{reward.threshold} referrals required
 														</span>
-														<span className="text-sm font-bold text-primary font-arimo">
+														<span className="text-sm font-bold text-gray-900 font-arimo">
 															{Math.round(progress)}%
 														</span>
 													</div>
@@ -308,14 +308,14 @@ export default function UserRewardsPage({ params }: { params: Promise<{ experien
 				{/* CTA Card */}
 				<Card className="mt-8 border-2 border-primary shadow-xl bg-gradient-to-r from-primary/5 to-accent/5">
 					<CardContent className="p-8 text-center">
-						<h3 className="text-2xl font-bold text-gray-900 mb-3 font-hegarty">
+						<h3 className="text-2xl text-gray-900 mb-3 font-hegarty">
 							Want to earn more rewards?
 						</h3>
 						<p className="text-gray-600 font-arimo mb-6">
 							Share your referral link with friends and start unlocking awesome rewards!
 						</p>
 						<Button size="lg" asChild>
-							<a href={`/experiences/${experienceId}/referrals`}>
+							<a href={`/experiences/${experienceId}/referrals`} className="flex items-center justify-center">
 								<Award className="w-5 h-5 mr-2" />
 								Go to My Referral Page
 							</a>

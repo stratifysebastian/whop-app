@@ -75,7 +75,7 @@ export function Leaderboard({
 
 	const containerClass = embedded 
 		? "w-full"
-		: "min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50";
+		: "min-h-screen bg-gradient-to-br from-orange-50 via-green to-purple-50";
 
 	return (
 		<div className={containerClass}>
@@ -106,7 +106,7 @@ export function Leaderboard({
 											className={`px-4 py-2 rounded-lg font-semibold font-arimo transition-all ${
 												timeframe === tf
 													? 'bg-primary text-white shadow-md'
-													: 'text-gray-600 hover:text-primary'
+													: 'text-gray-10 hover:text-gray-10'
 											}`}
 										>
 											{tf === '7d' ? '7 Days' : tf === '30d' ? '30 Days' : 'All Time'}
@@ -122,8 +122,8 @@ export function Leaderboard({
 				<Card className={embedded ? "border-0 shadow-none" : "border-0 shadow-xl"}>
 					{!embedded && (
 						<CardHeader className="border-b bg-gradient-to-r from-primary/5 to-accent/5">
-							<CardTitle className="text-2xl font-hegarty flex items-center gap-3">
-								<Trophy className="w-6 h-6 text-primary" />
+							<CardTitle className="text-2xl font-hegarty font-normal flex items-center gap-3">
+								<Trophy className="w-6 h-6 text-gray-10" />
 								Top {limit} Referrers
 							</CardTitle>
 						</CardHeader>
@@ -163,7 +163,7 @@ export function Leaderboard({
 													className="w-12 h-12 rounded-full border-2 border-white shadow-md"
 												/>
 											) : (
-												<div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold font-hegarty shadow-md text-lg">
+												<div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-hegarty shadow-md text-lg">
 													{entry.username.charAt(0).toUpperCase()}
 												</div>
 											)}
@@ -171,7 +171,7 @@ export function Leaderboard({
 
 										{/* Username */}
 										<div className="flex-1 min-w-0">
-											<div className="font-bold text-gray-900 font-hegarty text-lg truncate">
+											<div className="text-gray-10 font-hegarty text-lg truncate">
 												{entry.username}
 											</div>
 											<div className="text-sm text-gray-600 font-arimo">
@@ -184,7 +184,7 @@ export function Leaderboard({
 											<div className="text-right">
 												<div className="flex items-center gap-2">
 													<TrendingUp className="w-4 h-4 text-secondary" />
-													<span className="text-2xl font-bold text-gray-900 font-hegarty">
+													<span className="text-2xl font-bold text-gray-10 font-hegarty">
 														{entry.conversions}
 													</span>
 												</div>

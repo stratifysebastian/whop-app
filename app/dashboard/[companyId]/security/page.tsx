@@ -76,7 +76,7 @@ export default function SecurityDashboardPage({ params }: { params: Promise<{ co
 	};
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50">
+		<div className="min-h-screen bg-gradient-to-br from-orange-50 via-red to-purple-50">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 				{/* Header */}
 				<div className="flex items-center justify-between mb-8">
@@ -100,7 +100,7 @@ export default function SecurityDashboardPage({ params }: { params: Promise<{ co
 					<Card className="border-2 border-primary/20 shadow-lg">
 						<CardContent className="p-6">
 							<div className="flex items-center justify-between mb-2">
-								<AlertTriangle className="w-8 h-8 text-primary" />
+								<AlertTriangle className="w-8 h-8 text-gray-900" />
 								<Badge variant="default">Total</Badge>
 							</div>
 							<div className="text-3xl font-bold text-gray-900 mb-1 font-hegarty">
@@ -140,8 +140,8 @@ export default function SecurityDashboardPage({ params }: { params: Promise<{ co
 				{/* Flagged Referrals List */}
 				<Card className="border-0 shadow-xl">
 					<CardHeader className="border-b bg-gradient-to-r from-primary/5 to-accent/5">
-						<CardTitle className="text-2xl font-hegarty flex items-center gap-3">
-							<AlertTriangle className="w-6 h-6 text-primary" />
+						<CardTitle className="text-2xl font-hegarty font-normal flex items-center gap-3">
+							<AlertTriangle className="w-6 h-6 text-gray-10" />
 							Flagged Referrals
 						</CardTitle>
 						<CardDescription className="font-arimo">
@@ -158,7 +158,7 @@ export default function SecurityDashboardPage({ params }: { params: Promise<{ co
 							<div className="text-center py-12">
 								<Shield className="w-16 h-16 text-green-500 mx-auto mb-4" />
 								<p className="text-gray-900 font-arimo text-lg font-semibold mb-2">All Clear!</p>
-								<p className="text-gray-500 font-arimo text-sm">
+								<p className="text-gray-10 font-arimo text-sm">
 									No suspicious activity detected. Your referral program is running smoothly.
 								</p>
 							</div>
@@ -176,7 +176,7 @@ export default function SecurityDashboardPage({ params }: { params: Promise<{ co
 											
 											<div className="flex-1">
 												<div className="flex items-center gap-3 mb-2">
-													<h3 className="text-lg font-bold text-gray-900 font-hegarty">
+													<h3 className="text-lg font-bold text-gray-10 font-hegarty">
 														{referral.referrer_username} → {referral.referred_username}
 													</h3>
 													{getCheckTypeBadge(referral.check_type)}
@@ -224,7 +224,7 @@ export default function SecurityDashboardPage({ params }: { params: Promise<{ co
 						<div className="flex items-start gap-4">
 							<Shield className="w-8 h-8 text-info flex-shrink-0 mt-1" />
 							<div>
-								<h3 className="text-xl font-bold text-gray-900 mb-2 font-hegarty">
+								<h3 className="text-xl font-bold text-gray-900 font-normal mb-2 font-hegarty">
 									Fraud Detection Active
 								</h3>
 								<p className="text-gray-600 font-arimo mb-4">

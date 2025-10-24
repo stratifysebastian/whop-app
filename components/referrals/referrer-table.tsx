@@ -62,7 +62,7 @@ export function ReferrerTable({
 		<Card className="border-0 shadow-xl">
 			<CardHeader className="pb-4">
 				<div className="flex items-center justify-between flex-wrap gap-4">
-					<CardTitle className="text-2xl font-hegarty">Top Referrers</CardTitle>
+					<CardTitle className="text-2xl font-hegarty font-normal">Top Referrers</CardTitle>
 					
 					<div className="flex items-center gap-3">
 						{/* Search */}
@@ -107,7 +107,7 @@ export function ReferrerTable({
 									<th className="text-left px-6 py-4 font-semibold text-gray-700 font-arimo">
 										<button
 											onClick={() => handleSort('username')}
-											className="flex items-center gap-2 hover:text-primary transition-colors"
+											className="flex items-center gap-2 hover:text-gray-10 transition-colors"
 										>
 											Referrer
 											<SortIcon field="username" />
@@ -116,7 +116,7 @@ export function ReferrerTable({
 									<th className="text-left px-6 py-4 font-semibold text-gray-700 font-arimo">
 										<button
 											onClick={() => handleSort('referrals')}
-											className="flex items-center gap-2 hover:text-primary transition-colors"
+											className="flex items-center gap-2 hover:text-gray-10 transition-colors"
 										>
 											Referrals
 											<SortIcon field="referrals" />
@@ -125,7 +125,7 @@ export function ReferrerTable({
 									<th className="text-left px-6 py-4 font-semibold text-gray-700 font-arimo">
 										<button
 											onClick={() => handleSort('conversions')}
-											className="flex items-center gap-2 hover:text-primary transition-colors"
+											className="flex items-center gap-2 hover:text-gray-10 transition-colors"
 										>
 											Conversions
 											<SortIcon field="conversions" />
@@ -134,7 +134,7 @@ export function ReferrerTable({
 									<th className="text-left px-6 py-4 font-semibold text-gray-700 font-arimo">
 										<button
 											onClick={() => handleSort('conversion_rate')}
-											className="flex items-center gap-2 hover:text-primary transition-colors"
+											className="flex items-center gap-2 hover:text-gray-10 transition-colors"
 										>
 											Rate
 											<SortIcon field="conversion_rate" />
@@ -143,7 +143,7 @@ export function ReferrerTable({
 									<th className="text-left px-6 py-4 font-semibold text-gray-700 font-arimo">
 										<button
 											onClick={() => handleSort('revenue_attributed')}
-											className="flex items-center gap-2 hover:text-primary transition-colors"
+											className="flex items-center gap-2 hover:text-gray-10 transition-colors"
 										>
 											Revenue
 											<SortIcon field="revenue_attributed" />
@@ -152,7 +152,7 @@ export function ReferrerTable({
 									<th className="text-left px-6 py-4 font-semibold text-gray-700 font-arimo">
 										<button
 											onClick={() => handleSort('rewards_earned')}
-											className="flex items-center gap-2 hover:text-primary transition-colors"
+											className="flex items-center gap-2 hover:text-gray-10 transition-colors"
 										>
 											Rewards
 											<SortIcon field="rewards_earned" />
@@ -171,11 +171,11 @@ export function ReferrerTable({
 									>
 										<td className="px-6 py-4">
 											<div className="flex items-center gap-3">
-												<div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold font-hegarty shadow-md">
+												<div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-hegarty shadow-md">
 													{referrer.username.charAt(0).toUpperCase()}
 												</div>
 												<div>
-													<div className="font-semibold text-gray-900 font-arimo">
+													<div className="font-semibold text-gray-10 font-arimo">
 														{referrer.username}
 													</div>
 													{referrer.email && (
@@ -197,7 +197,7 @@ export function ReferrerTable({
 											</Badge>
 										</td>
 										<td className="px-6 py-4">
-											<span className="font-semibold text-gray-900 font-arimo">
+											<span className="font-semibold text-gray-10 font-arimo">
 												{referrer.conversion_rate}%
 											</span>
 										</td>
